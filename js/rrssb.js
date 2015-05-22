@@ -142,9 +142,10 @@
 	function checkSize(init) {
         var self = $(this);
         var buttons = $('li', self);
+        var count = buttons.length;
 
         // get buttons in reverse order and loop through each
-        $(buttons.get().reverse()).each(function forEachButton(index, count) {
+        $(buttons.get().reverse()).each(function forEachButton() {
 
             var button = $(this);
 
@@ -159,7 +160,7 @@
                 }
             }
 
-            if (!--count) backUpFromSmall.call(self.get(0));
+            if (0 === --count) backUpFromSmall.call(self.get(0));
         });
 
 		// if first time running, put it through the magic layout
