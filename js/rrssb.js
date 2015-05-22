@@ -17,7 +17,7 @@
        \__\/         \__\/
 */
 
-+(function(window, $, undefined) {
+(function rrssb(window, $, undefined) {
 	'use strict';
 
 	var support = {
@@ -28,7 +28,7 @@
 	 * Public Function
 	 */
 
-	 $.fn.rrssb = function( options ) {
+	 $.fn.rrssb = function initRrssb( options ) {
 
 		// Settings that $.rrssb() will accept.
 		var settings = $.extend({
@@ -70,7 +70,7 @@
 	/*
 	 * Utility functions
 	 */
-	var detectCalcSupport = function(){
+	function detectCalcSupport() {
 		//detect if calc is natively supported.
 		var el = $('<div>');
 		var calcProps = [
@@ -90,9 +90,9 @@
 		}
 
 		el.remove();
-	};
+	}
 
-	var encodeString = function(string) {
+	function encodeString(string) {
 		// Recursively decode string first to ensure we aren't double encoding.
 		if (string !== undefined && string !== null) {
 			if (string.match(/%[0-9a-f]{2}/i) !== null) {
@@ -102,11 +102,11 @@
 				return encodeURIComponent(string);
 			}
 		}
-	};
+	}
 
-	var setPercentBtns = function() {
+	function setPercentBtns() {
 		// loop through each instance of buttons
-		$('.rrssb-buttons').each(function(index) {
+		$('.rrssb-buttons').each(function forEachSet() {
 			var self = $(this);
 			var buttons = $('li:visible', self);
 			var numOfButtons = buttons.length;
@@ -115,11 +115,11 @@
 			// set initial width of buttons
 			buttons.css('width', initBtnWidth + '%').attr('data-initwidth',initBtnWidth);
 		});
-	};
+	}
 
-	var makeExtremityBtns = function() {
+	function makeExtremityBtns() {
 		// loop through each instance of buttons
-		$('.rrssb-buttons').each(function(index) {
+		$('.rrssb-buttons').each(function forEachSet() {
 			var self = $(this);
 			//get button width
 			var containerWidth = self.width();
@@ -138,11 +138,11 @@
 				self.removeClass('tiny-format');
 			}
 		});
-	};
+	}
 
-	var backUpFromSmall = function() {
+	function backUpFromSmall() {
 		// loop through each instance of buttons
-		$('.rrssb-buttons').each(function(index) {
+		$('.rrssb-buttons').each(function forEachSet() {
 			var self = $(this);
 
 			var buttons = $('li', self);
@@ -165,7 +165,7 @@
 				}
 
 			} else {
-				buttons.not('.small').each(function(index) {
+				buttons.not('.small').each(function forEachButton() {
 					var button = $(this);
 					var txtWidth = parseFloat(button.attr('data-size')) + 55;
 					var btnWidth = parseFloat(button.width());
@@ -182,17 +182,17 @@
 				}
 			}
 		});
-	};
+	}
 
-	var checkSize = function(init) {
+	function checkSize(init) {
 		// loop through each instance of buttons
-		$('.rrssb-buttons').each(function(index) {
+		$('.rrssb-buttons').each(function forEachSet() {
 
 			var self = $(this);
 			var buttons = $('li', self);
 
 			// get buttons in reverse order and loop through each
-			$(buttons.get().reverse()).each(function(index, count) {
+			$(buttons.get().reverse()).each(function forEachButton(index, count) {
 
 				var button = $(this);
 
@@ -215,11 +215,11 @@
 		if (init === true) {
 			rrssbMagicLayout(sizeSmallBtns);
 		}
-	};
+	}
 
-	var sizeSmallBtns = function() {
+	function sizeSmallBtns() {
 		// loop through each instance of buttons
-		$('.rrssb-buttons').each(function(index) {
+		$('.rrssb-buttons').each(function forEachSet() {
 			var self = $(this);
 			var regButtonCount;
 			var regPercent;
@@ -265,10 +265,10 @@
 		}); //end loop
 
 		makeExtremityBtns();
-	};
+	}
 
-	var rrssbInit = function() {
-		$('.rrssb-buttons').each(function(index) {
+	function rrssbInit() {
+		$('.rrssb-buttons').each(function forEachSet(index) {
 			$(this).addClass('rrssb-'+(index + 1));
 		});
 
@@ -277,25 +277,25 @@
 		setPercentBtns();
 
 		// grab initial text width of each button and add as data attr
-		$('.rrssb-buttons li .rrssb-text').each(function(index) {
+		$('.rrssb-buttons li .rrssb-text').each(function forEachButtonText() {
 			var buttonTxt = $(this);
 			var txtWdth = buttonTxt.width();
 			buttonTxt.closest('li').attr('data-size', txtWdth);
 		});
 
 		checkSize(true);
-	};
+	}
 
-	var rrssbMagicLayout = function(callback) {
+	function rrssbMagicLayout(callback) {
 		//remove small buttons before each conversion try
 		$('.rrssb-buttons li.small').removeClass('small');
 
 		checkSize();
 
 		callback();
-	};
+	}
 
-	var popupCenter = function(url, title, w, h) {
+	function popupCenter(url, title, w, h) {
 		// Fixes dual-screen position                         Most browsers      Firefox
 		var dualScreenLeft = window.screenLeft !== undefined ? window.screenLeft : screen.left;
 		var dualScreenTop = window.screenTop !== undefined ? window.screenTop : screen.top;
@@ -312,11 +312,11 @@
 		if (window.focus) {
 			newWindow.focus();
 		}
-	};
+	}
 
-	var waitForFinalEvent = (function () {
+	var waitForFinalEvent = (function makeWaitFunction() {
 		var timers = {};
-		return function (callback, ms, uniqueId) {
+		return function waitFunction(callback, ms, uniqueId) {
 			if (!uniqueId) {
 				uniqueId = "Don't call this twice without a uniqueId";
 			}
@@ -328,7 +328,7 @@
 	})();
 
 	// init load
-	$(document).ready(function(){
+	$(document).ready(function rrssbOnReady(){
 		/*
 		 * Event listners
 		 */
@@ -340,11 +340,11 @@
 		});
 
 		// resize function
-		$(window).resize(function () {
+		$(window).resize(function resize() {
 
 			rrssbMagicLayout(sizeSmallBtns);
 
-			waitForFinalEvent(function(){
+			waitForFinalEvent(function doMagicLayout(){
 				rrssbMagicLayout(sizeSmallBtns);
 			}, 200, "finished resizing");
 		});
