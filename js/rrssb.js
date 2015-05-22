@@ -3,7 +3,6 @@
  Team: @dbox, @joshuatuscan
  Site: http://www.kurtnoble.com/labs/rrssb
  Twitter: @therealkni
-
         ___           ___
        /__/|         /__/\        ___
       |  |:|         \  \:\      /  /\
@@ -28,43 +27,8 @@
 	 * Public Function
 	 */
 
-	 $.fn.rrssb = function initRrssb( options ) {
-
-		// Settings that $.rrssb() will accept.
-		var settings = $.extend({
-			description: undefined,
-			emailAddress: undefined,
-			emailBody: undefined,
-			emailSubject: undefined,
-			image: undefined,
-			title: undefined,
-			url: undefined
-		}, options );
-
-		// Return the encoded strings if the settings have been changed.
-		for (var key in settings) {
-			if (settings.hasOwnProperty(key) && settings[key] !== undefined) {
-				settings[key] = encodeString(settings[key]);
-			}
-		};
-
-		if (settings.url !== undefined) {
-			$(this).find('.rrssb-facebook a').attr('href', 'https://www.facebook.com/sharer/sharer.php?u=' + settings.url);
-			$(this).find('.rrssb-tumblr a').attr('href', 'http://tumblr.com/share/link?url=' + settings.url + (settings.title !== undefined ? '&name=' + settings.title : '')  + (settings.description !== undefined ? '&description=' + settings.description : ''));
-			$(this).find('.rrssb-linkedin a').attr('href', 'http://www.linkedin.com/shareArticle?mini=true&url=' + settings.url + (settings.title !== undefined ? '&title=' + settings.title : '') + (settings.description !== undefined ? '&summary=' + settings.description : ''));
-			$(this).find('.rrssb-twitter a').attr('href', 'http://twitter.com/home?status=' + (settings.description !== undefined ? settings.description : '') + '%20' + settings.url);
-			$(this).find('.rrssb-hackernews a').attr('href', 'https://news.ycombinator.com/submitlink?u=' + settings.url + (settings.title !== undefined ? '&text=' + settings.title : ''));
-			$(this).find('.rrssb-reddit a').attr('href', 'http://www.reddit.com/submit?url=' + settings.url + (settings.description !== undefined ? '&text=' + settings.description : '') + (settings.title !== undefined ? '&title=' + settings.title : ''));
-			$(this).find('.rrssb-googleplus a').attr('href', 'https://plus.google.com/share?url=' + (settings.description !== undefined ? settings.description : '') + '%20' + settings.url);
-			$(this).find('.rrssb-pinterest a').attr('href', 'http://pinterest.com/pin/create/button/?url=' + settings.url + ((settings.image !== undefined) ? '&amp;media=' + settings.image : '') + (settings.description !== undefined ? '&amp;description=' + settings.description : ''));
-			$(this).find('.rrssb-pocket a').attr('href', 'https://getpocket.com/save?url=' + settings.url);
-			$(this).find('.rrssb-github a').attr('href', settings.url);
-		}
-
-		if (settings.emailAddress !== undefined) {
-			$(this).find('.rrssb-email a').attr('href', 'mailto:' + settings.emailAddress + '?' + (settings.emailSubject !== undefined ? 'subject=' + settings.emailSubject : '') + (settings.emailBody !== undefined ? '&amp;body=' + settings.emailBody : ''));
-		}
-
+	 $.fn.rrssb = function rssbPlugin() {
+		this.each(rrssbInit);
 	};
 
 	/*
@@ -105,192 +69,172 @@
 	}
 
 	function setPercentBtns() {
-		// loop through each instance of buttons
-		$('.rrssb-buttons').each(function forEachSet() {
-			var self = $(this);
-			var buttons = $('li:visible', self);
-			var numOfButtons = buttons.length;
-			var initBtnWidth = 100 / numOfButtons;
+        var self = $(this);
+        var buttons = $('li:visible', self);
+        var numOfButtons = buttons.length;
+        var initBtnWidth = 100 / numOfButtons;
 
-			// set initial width of buttons
-			buttons.css('width', initBtnWidth + '%').attr('data-initwidth',initBtnWidth);
-		});
+        // set initial width of buttons
+        buttons.css('width', initBtnWidth + '%').attr('data-initwidth',initBtnWidth);
 	}
 
 	function makeExtremityBtns() {
-		// loop through each instance of buttons
-		$('.rrssb-buttons').each(function forEachSet() {
-			var self = $(this);
-			//get button width
-			var containerWidth = self.width();
-			var buttonWidth = $('li', self).not('.small').first().width();
+        var self = $(this);
+        //get button width
+        var containerWidth = self.width();
+        var buttonWidth = $('li', self).not('.small').first().width();
 
-			// enlarge buttons if they get wide enough
-			if (buttonWidth > 170 && $('li.small', self).length < 1) {
-				self.addClass('large-format');
-			} else {
-				self.removeClass('large-format');
-			}
+        // enlarge buttons if they get wide enough
+        if (buttonWidth > 170 && $('li.small', self).length < 1) {
+            self.addClass('large-format');
+        } else {
+            self.removeClass('large-format');
+        }
 
-			if (containerWidth < 200) {
-				self.removeClass('small-format').addClass('tiny-format');
-			} else {
-				self.removeClass('tiny-format');
-			}
-		});
+        if (containerWidth < 200) {
+            self.removeClass('small-format').addClass('tiny-format');
+        } else {
+            self.removeClass('tiny-format');
+        }
 	}
 
 	function backUpFromSmall() {
-		// loop through each instance of buttons
-		$('.rrssb-buttons').each(function forEachSet() {
-			var self = $(this);
+        var self = $(this);
 
-			var buttons = $('li', self);
-			var smallButtons = buttons.filter('.small');
-			var totalBtnSze = 0;
-			var totalTxtSze = 0;
-			var upCandidate = smallButtons.first();
-			var nextBackUp = parseFloat(upCandidate.attr('data-size')) + 55;
-			var smallBtnCount = smallButtons.length;
+        var buttons = $('li', self);
+        var smallButtons = buttons.filter('.small');
+        var totalBtnSze = 0;
+        var totalTxtSze = 0;
+        var upCandidate = smallButtons.first();
+        var nextBackUp = parseFloat(upCandidate.attr('data-size')) + 55;
+        var smallBtnCount = smallButtons.length;
 
-			if (smallBtnCount === buttons.length) {
-				var btnCalc = smallBtnCount * 42;
-				var containerWidth = self.width();
+        if (smallBtnCount === buttons.length) {
+            var btnCalc = smallBtnCount * 42;
+            var containerWidth = self.width();
 
-				if ((btnCalc + nextBackUp) < containerWidth) {
-					self.removeClass('small-format');
-					smallButtons.first().removeClass('small');
+            if ((btnCalc + nextBackUp) < containerWidth) {
+                self.removeClass('small-format');
+                smallButtons.first().removeClass('small');
 
-					sizeSmallBtns();
-				}
+                sizeSmallBtns.call(this);
+            }
 
-			} else {
-				buttons.not('.small').each(function forEachButton() {
-					var button = $(this);
-					var txtWidth = parseFloat(button.attr('data-size')) + 55;
-					var btnWidth = parseFloat(button.width());
+        } else {
+            buttons.not('.small').each(function forEachButton() {
+                var button = $(this);
+                var txtWidth = parseFloat(button.attr('data-size')) + 55;
+                var btnWidth = parseFloat(button.width());
 
-					totalBtnSze = totalBtnSze + btnWidth;
-					totalTxtSze = totalTxtSze + txtWidth;
-				});
+                totalBtnSze = totalBtnSze + btnWidth;
+                totalTxtSze = totalTxtSze + txtWidth;
+            });
 
-				var spaceLeft = totalBtnSze - totalTxtSze;
+            var spaceLeft = totalBtnSze - totalTxtSze;
 
-				if (nextBackUp < spaceLeft) {
-					upCandidate.removeClass('small');
-					sizeSmallBtns();
-				}
-			}
-		});
+            if (nextBackUp < spaceLeft) {
+                upCandidate.removeClass('small');
+                sizeSmallBtns.call(this);
+            }
+        }
 	}
 
 	function checkSize(init) {
-		// loop through each instance of buttons
-		$('.rrssb-buttons').each(function forEachSet() {
+        var self = $(this);
+        var buttons = $('li', self);
 
-			var self = $(this);
-			var buttons = $('li', self);
+        // get buttons in reverse order and loop through each
+        $(buttons.get().reverse()).each(function forEachButton(index, count) {
 
-			// get buttons in reverse order and loop through each
-			$(buttons.get().reverse()).each(function forEachButton(index, count) {
+            var button = $(this);
 
-				var button = $(this);
+            if (button.hasClass('small') === false) {
+                var txtWidth = parseFloat(button.attr('data-size')) + 55;
+                var btnWidth = parseFloat(button.width());
 
-				if (button.hasClass('small') === false) {
-					var txtWidth = parseFloat(button.attr('data-size')) + 55;
-					var btnWidth = parseFloat(button.width());
+                if (txtWidth > btnWidth) {
+                    var btn2small = buttons.not('.small').last();
+                    $(btn2small).addClass('small');
+                    sizeSmallBtns.call(self.get(0));
+                }
+            }
 
-					if (txtWidth > btnWidth) {
-						var btn2small = buttons.not('.small').last();
-						$(btn2small).addClass('small');
-						sizeSmallBtns();
-					}
-				}
-
-				if (!--count) backUpFromSmall();
-			});
-		});
+            if (!--count) backUpFromSmall.call(self.get(0));
+        });
 
 		// if first time running, put it through the magic layout
 		if (init === true) {
-			rrssbMagicLayout(sizeSmallBtns);
+			rrssbMagicLayout.call(this, sizeSmallBtns.bind(this));
 		}
 	}
 
 	function sizeSmallBtns() {
-		// loop through each instance of buttons
-		$('.rrssb-buttons').each(function forEachSet() {
-			var self = $(this);
-			var regButtonCount;
-			var regPercent;
-			var pixelsOff;
-			var magicWidth;
-			var smallBtnFraction;
-			var buttons = $('li', self);
-			var smallButtons = buttons.filter('.small');
+        var self = $(this);
+        var regButtonCount;
+        var regPercent;
+        var pixelsOff;
+        var magicWidth;
+        var smallBtnFraction;
+        var buttons = $('li', self);
+        var smallButtons = buttons.filter('.small');
 
-			// readjust buttons for small display
-			var smallBtnCount = smallButtons.length;
+        // readjust buttons for small display
+        var smallBtnCount = smallButtons.length;
 
-			// make sure there are small buttons
-			if (smallBtnCount > 0 && smallBtnCount !== buttons.length) {
-				self.removeClass('small-format');
+        // make sure there are small buttons
+        if (smallBtnCount > 0 && smallBtnCount !== buttons.length) {
+            self.removeClass('small-format');
 
-				//make sure small buttons are square when not all small
-				smallButtons.css('width','42px');
-				pixelsOff = smallBtnCount * 42;
-				regButtonCount = buttons.not('.small').length;
-				regPercent = 100 / regButtonCount;
-				smallBtnFraction = pixelsOff / regButtonCount;
+            //make sure small buttons are square when not all small
+            smallButtons.css('width','42px');
+            pixelsOff = smallBtnCount * 42;
+            regButtonCount = buttons.not('.small').length;
+            regPercent = 100 / regButtonCount;
+            smallBtnFraction = pixelsOff / regButtonCount;
 
-				// if calc is not supported. calculate the width on the fly.
-				if (support.calc === false) {
-					magicWidth = ((self.innerWidth()-1) / regButtonCount) - smallBtnFraction;
-					magicWidth = Math.floor(magicWidth*1000) / 1000;
-					magicWidth += 'px';
-				} else {
-					magicWidth = support.calc+'('+regPercent+'% - '+smallBtnFraction+'px)';
-				}
+            // if calc is not supported. calculate the width on the fly.
+            if (support.calc === false) {
+                magicWidth = ((self.innerWidth()-1) / regButtonCount) - smallBtnFraction;
+                magicWidth = Math.floor(magicWidth*1000) / 1000;
+                magicWidth += 'px';
+            } else {
+                magicWidth = support.calc+'('+regPercent+'% - '+smallBtnFraction+'px)';
+            }
 
-				buttons.not('.small').css('width', magicWidth);
+            buttons.not('.small').css('width', magicWidth);
 
-			} else if (smallBtnCount === buttons.length) {
-				// if all buttons are small, change back to percentage
-				self.addClass('small-format');
-				setPercentBtns();
-			} else {
-				self.removeClass('small-format');
-				setPercentBtns();
-			}
-		}); //end loop
+        } else if (smallBtnCount === buttons.length) {
+            // if all buttons are small, change back to percentage
+            self.addClass('small-format');
+            setPercentBtns.call(this);
+        } else {
+            self.removeClass('small-format');
+            setPercentBtns.call(this);
+        }
 
-		makeExtremityBtns();
+		makeExtremityBtns.call(this);
 	}
 
 	function rrssbInit() {
-		$('.rrssb-buttons').each(function forEachSet(index) {
-			$(this).addClass('rrssb-'+(index + 1));
-		});
-
 		detectCalcSupport();
 
-		setPercentBtns();
+		setPercentBtns.call(this);
 
 		// grab initial text width of each button and add as data attr
-		$('.rrssb-buttons li .rrssb-text').each(function forEachButtonText() {
-			var buttonTxt = $(this);
+        $(this).find('li .rrssb-text').each(function forEachButtonText(index, element) {
+			var buttonTxt = $(element);
 			var txtWdth = buttonTxt.width();
 			buttonTxt.closest('li').attr('data-size', txtWdth);
 		});
 
-		checkSize(true);
+		checkSize.call(this, true);
 	}
 
 	function rrssbMagicLayout(callback) {
 		//remove small buttons before each conversion try
-		$('.rrssb-buttons li.small').removeClass('small');
+		$(this).find('li.small').removeClass('small');
 
-		checkSize();
+		checkSize.call(this);
 
 		callback();
 	}
@@ -341,18 +285,17 @@
 
 		// resize function
 		$(window).resize(function resize() {
+            $('.rrssb-buttons').each(function doResize() {
+                var container = this;
+                rrssbMagicLayout.call(this, sizeSmallBtns.bind(this));
 
-			rrssbMagicLayout(sizeSmallBtns);
-
-			waitForFinalEvent(function doMagicLayout(){
-				rrssbMagicLayout(sizeSmallBtns);
-			}, 200, "finished resizing");
+                waitForFinalEvent(function doMagicLayout() {
+                    rrssbMagicLayout.call(container, sizeSmallBtns.bind(container));
+                }, 200, "finished resizing");
+            });
 		});
 
-		rrssbInit();
+		$('.rrssb-buttons').rrssb();
 	});
-
-	// Make global
-	window.rrssbInit = rrssbInit;
 
 })(window, jQuery);
