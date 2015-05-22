@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /*!
  Ridiculously Responsive Social Sharing Buttons
  Team: @dbox, @joshuatuscan
